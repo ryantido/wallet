@@ -31,7 +31,7 @@ mobile/.DS_Store
 mobile/*.pem
 
 # local env files
-mobile/.env*.local
+mobile/.env
 
 # typescript
 mobile/*.tsbuildinfo
@@ -48,7 +48,6 @@ mobile/android
 mobile/expo-env.d.ts
 mobile/native-wind.d.ts
 # @end expo-cli
-
 
 mobile/.vscode
 mobile/scripts
