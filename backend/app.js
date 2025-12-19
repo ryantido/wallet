@@ -4,10 +4,14 @@ import cors from "cors";
 import { connection } from "./config/db.js";
 import { rateLimiter } from "./middlewares/rate-limit.js";
 import { router as transactionsRoute } from "./routes/transactionsRoute.js";
+import { job } from "./config/cron.js";
 
 dotenv.config();
 
 const app = express();
+
+if (process.env.NODE_ENV === "production") job.start(); 
+
 app.use(cors());
 
 app.use(rateLimiter);
