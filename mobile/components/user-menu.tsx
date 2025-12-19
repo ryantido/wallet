@@ -5,9 +5,23 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Text } from '@/components/ui/text';
 import { useAuth, useUser } from '@clerk/clerk-expo';
 import type { TriggerRef } from '@rn-primitives/popover';
-import { LogOutIcon, PlusIcon, SettingsIcon } from 'lucide-react-native';
+import { LogOutIcon, MoonStarIcon, PlusIcon, SettingsIcon, SunIcon } from 'lucide-react-native';
+import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { View } from 'react-native';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './ui/dialog';
+import { Label } from './ui/label';
+import { Input } from './ui/input';
+import { router } from 'expo-router';
 
 export function UserMenu() {
   const { user } = useUser();
@@ -18,6 +32,13 @@ export function UserMenu() {
     popoverTriggerRef.current?.close();
     await signOut();
   }
+
+  const { colorScheme, toggleColorScheme } = useColorScheme();
+
+  const THEME_ICONS = {
+    light: SunIcon,
+    dark: MoonStarIcon,
+  };
 
   return (
     <Popover>
@@ -40,17 +61,58 @@ export function UserMenu() {
                 </Text>
               ) : null}
             </View>
+
+            <Button
+              onPress={toggleColorScheme}
+              size="icon"
+              variant="ghost"
+              className="rounded-full">
+              <Icon as={THEME_ICONS[colorScheme ?? 'light']} className="size-6" />
+            </Button>
           </View>
           <View className="flex-row flex-wrap gap-3 py-0.5">
-            <Button
-              variant="outline"
-              size="sm"
-              onPress={() => {
-                // TODO: Navigate to account settings screen
-              }}>
-              <Icon as={SettingsIcon} className="size-4" />
-              <Text>Manage Account</Text>
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Icon as={SettingsIcon} className="size-4" />
+                  <Text>Manage Account</Text>
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>&Eacute;ditez votre profil</DialogTitle>
+                  <DialogDescription>
+                    Faites des changements dans votre profil ici. Cliquez sur enregistrer lorsque
+                    vous avez fini.
+                  </DialogDescription>
+                </DialogHeader>
+                <View className="grid gap-4">
+                  <View className="grid gap-3">
+                    <Label htmlFor="name-1">Nom</Label>
+                    <Input
+                      id="name-1"
+                      defaultValue={user?.fullName || user?.emailAddresses[0].emailAddress}
+                    />
+                  </View>
+                  <View className="grid gap-3">
+                    <Label htmlFor="username-1">adresse e-mail</Label>
+                    <Input id="username-1" defaultValue={user?.emailAddresses[0].emailAddress} />
+                  </View>
+                </View>
+                <DialogFooter>
+                  <DialogClose asChild>
+                    <Button variant="outline">
+                      <Text>Annuler</Text>
+                    </Button>
+                  </DialogClose>
+                  <DialogClose asChild>
+                    <Button>
+                      <Text>Enregistrer</Text>
+                    </Button>
+                  </DialogClose>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
             <Button variant="outline" size="sm" className="flex-1" onPress={onSignOut}>
               <Icon as={LogOutIcon} className="size-4" />
               <Text>Sign Out</Text>
@@ -62,14 +124,15 @@ export function UserMenu() {
           size="lg"
           className="h-16 justify-start gap-3 rounded-none rounded-b-md px-3 sm:h-14"
           onPress={() => {
-            // TODO: Navigate to add account screen
+            popoverTriggerRef.current?.close();
+            router.push('/transaction/add');
           }}>
           <View className="size-10 items-center justify-center">
             <View className="size-7 items-center justify-center rounded-full border border-dashed border-border bg-muted/50">
               <Icon as={PlusIcon} className="size-5" />
             </View>
           </View>
-          <Text>Add account</Text>
+          <Text>Ajouter une transaction</Text>
         </Button>
       </PopoverContent>
     </Popover>

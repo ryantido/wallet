@@ -10,8 +10,6 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
-import { View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -25,7 +23,7 @@ export default function RootLayout() {
     <ClerkProvider tokenCache={tokenCache}>
       <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
         <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-          <Routes />
+        <Routes />
         <PortalHost />
       </ThemeProvider>
     </ClerkProvider>
@@ -60,6 +58,7 @@ function Routes() {
       {/* Screens only shown when the user IS signed in */}
       <Stack.Protected guard={isSignedIn}>
         <Stack.Screen name="index" />
+        <Stack.Screen name="transaction/add" />
       </Stack.Protected>
 
       {/* Screens outside the guards are accessible to everyone (e.g. not found) */}

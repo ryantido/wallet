@@ -13,3 +13,15 @@ pnpm install
 ```bash
 pnpm run android
 ```
+
+## Backend
+
+```bash
+pnpm run dev
+```
+
+## Environment variables
+
+```bash
+pnpm run setup
+```
